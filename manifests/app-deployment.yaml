@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-app
+  namespace: secure-lab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-app
+  template:
+    metadata:
+      labels:
+        app: demo-app
+    spec:
+      containers:
+        - name: demo-app
+          image: nginx:1.27-alpine
+          ports:
+            - containerPort: 80
+          env:
+            - name: APP_USER
+              valueFrom:
+                secretKeyRef:
+                  name: demo-secret
+                  key: username
+            - name: APP_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: demo-secret
+                  key: password
